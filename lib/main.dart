@@ -4,7 +4,7 @@ import 'pages/student/login_page.dart';
 void main() {
   runApp(BuScanApp());
 }
-
+//haya
 class BuScanApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
