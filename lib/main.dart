@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'pages/student/login_page.dart';
+import 'pages/shared/login_page.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();

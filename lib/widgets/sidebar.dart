@@ -1,12 +1,12 @@
 import 'package:bus_scan/pages/student/address_page.dart';
-import 'package:bus_scan/pages/student/login_page.dart';
+import 'package:bus_scan/pages/shared/login_page.dart';
 import 'package:flutter/material.dart';
 import '../pages/student/home_page.dart';
 import '../pages/student/account_page.dart';
-import '../pages/student/menu_page.dart';
+import '../pages/shared/menu_page.dart';
 import '../pages/student/schedule_page.dart';
 import '../pages/student/payment_page.dart';
-import 'sidebar.dart';
+
 
 class SideBar extends StatelessWidget {
   final BuildContext context;

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:bus_scan/supabase.dart'; // Import your supabase instance
-import 'home_page.dart';
+import 'package:bus_scan/supabase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:bus_scan/pages/driver/driver_home_page.dart';
+import 'package:bus_scan/pages/student/home_page.dart'; // or student_home_page.dart if you separate
 
 class CreateAccountPage extends StatefulWidget {
   @override
@@ -11,9 +12,11 @@ class CreateAccountPage extends StatefulWidget {
 class _CreateAccountPageState extends State<CreateAccountPage> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
-  final TextEditingController emailController = TextEditingController(); // ADD email
+  final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+
+  String selectedRole = 'student'; // default
 
   Future<void> createAccount() async {
     if (passwordController.text != confirmPasswordController.text) {
@@ -42,18 +45,37 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           'first_name': firstName,
           'last_name': lastName,
           'phone_number': phoneController.text.trim(),
-          'role': 'student', // replace with dropdown later
+          'role': selectedRole,
           'email': user.email,
         });
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Account created successfully! Please log in.')),
-        );
+        // Fetch role to confirm and redirect
+        final profile = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', user.id)
+            .maybeSingle();
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => HomePage()),
-        );
+        if (profile != null) {
+          final role = profile['role'];
+
+          if (role == 'driver') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) =>  DriverHomePage()),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (_) =>  HomePage()),
+            );
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Profile not found. Please try again.')),
+          );
+        }
+
       }
     } on AuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -65,7 +87,6 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       );
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -79,77 +100,58 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset("assets/logo2.png", height: 100),
-                SizedBox(height: 30),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
-                    color: Colors.blue[200],
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  child: TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(labelText: 'Full Name'),
-                  ),
+                const SizedBox(height: 30),
+                buildTextField(nameController, 'Full Name'),
+                const SizedBox(height: 20),
+                buildTextField(phoneController, 'Phone Number'),
+                const SizedBox(height: 20),
+                buildTextField(emailController, 'Email Address'),
+                const SizedBox(height: 20),
+                buildTextField(passwordController, 'Password', obscure: true),
+                const SizedBox(height: 20),
+                buildTextField(confirmPasswordController, 'Confirm Password', obscure: true),
+                const SizedBox(height: 20),
+
+                // Dropdown for Role
+                DropdownButton<String>(
+                  value: selectedRole,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedRole = newValue!;
+                    });
+                  },
+                  items: ['student', 'driver'].map((role) {
+                    return DropdownMenuItem(
+                      value: role,
+                      child: Text(role[0].toUpperCase() + role.substring(1)),
+                    );
+                  }).toList(),
                 ),
-                SizedBox(height: 20),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
-                    color: Colors.blue[200],
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  child: TextField(
-                    controller: phoneController,
-                    decoration: InputDecoration(labelText: 'Phone Number'),
-                  ),
-                ),
-                SizedBox(height: 20),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
-                    color: Colors.blue[200],
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  child: TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(labelText: 'Email Address'), // ADD email
-                  ),
-                ),
-                SizedBox(height: 20),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
-                    color: Colors.blue[200],
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  child: TextField(
-                    controller: passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: 'Password'),
-                  ),
-                ),
-                SizedBox(height: 20),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blue),
-                    color: Colors.blue[200],
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                  ),
-                  child: TextField(
-                    controller: confirmPasswordController,
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: 'Confirm Password'),
-                  ),
-                ),
-                SizedBox(height: 30),
+
+                const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: createAccount,
-                  child: Text('Create Account'),
+                  child: const Text('Create Account'),
                 ),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildTextField(TextEditingController controller, String label, {bool obscure = false}) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blue),
+        color: Colors.blue[200],
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
+      child: TextField(
+        controller: controller,
+        obscureText: obscure,
+        decoration: InputDecoration(labelText: label, border: InputBorder.none, contentPadding: EdgeInsets.all(10)),
       ),
     );
   }
