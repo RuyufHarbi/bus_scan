@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../widgets/sidebar.dart';class AccountPage extends StatelessWidget {
+import '../../widgets/sidebar.dart';
+class AccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

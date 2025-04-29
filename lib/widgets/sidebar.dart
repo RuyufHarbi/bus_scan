@@ -1,3 +1,5 @@
+import 'package:bus_scan/pages/student/address_page.dart';
+import 'package:bus_scan/pages/student/login_page.dart';
 import 'package:flutter/material.dart';
 import '../pages/student/home_page.dart';
 import '../pages/student/account_page.dart';
@@ -24,7 +26,10 @@ class SideBar extends StatelessWidget {
             onSelected: (value) {
               switch (value) {
                 case 'address':
-                // Navigate or show address info
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => AddressPage(city: 'taif', address: '102 cedron chace', houseNumber: '123', moreDetails: 'gogo')), // Replace with your About Us page
+                  );
                   break;
                 case 'about':
                   Navigator.push(
@@ -33,7 +38,10 @@ class SideBar extends StatelessWidget {
                   );
                   break;
                 case 'logout':
-                // Log out logic here
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => LoginPage()),
+                  );
                   break;
               }
             },
