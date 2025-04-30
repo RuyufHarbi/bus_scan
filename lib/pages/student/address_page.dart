@@ -1,89 +1,116 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class AddressPage extends StatelessWidget {
-  final String city;
-  final String address;
-  final String houseNumber;
-  final String moreDetails;
+class AddressPage extends StatefulWidget {
+  @override
+  _AddressPageState createState() => _AddressPageState();
+}
 
-  const AddressPage({
-    Key? key,
-    required this.city,
-    required this.address,
-    required this.houseNumber,
-    required this.moreDetails,
-  }) : super(key: key);
+class _AddressPageState extends State<AddressPage> {
+  final streetController = TextEditingController();
+  final buildingController = TextEditingController();
+  final cityController = TextEditingController();
+
+  List<Map<String, dynamic>> districts = [];
+  int? selectedDistrictId;
+  bool loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDistricts();
+  }
+
+  Future<void> fetchDistricts() async {
+    final response = await Supabase.instance.client
+        .from('districts')
+        .select()
+        .order('name', ascending: true);
+
+    setState(() {
+      districts = List<Map<String, dynamic>>.from(response);
+      loading = false;
+    });
+  }
+
+  Future<void> saveAddress() async {
+    if (streetController.text.trim().isEmpty ||
+        buildingController.text.trim().isEmpty ||
+        cityController.text.trim().isEmpty ||
+        selectedDistrictId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Please fill all fields including district.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final userId = Supabase.instance.client.auth.currentUser!.id;
+
+    await Supabase.instance.client.from('student_address').upsert({
+      'id': userId,
+      'street': streetController.text.trim(),
+      'building_no': buildingController.text.trim(),
+      'city': cityController.text.trim(),
+      'district_id': selectedDistrictId,
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Address saved successfully!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Address Details'),
-      ),
-      body: Padding(
+      appBar: AppBar(title: Text('Student Address')),
+      body: loading
+          ? Center(child: CircularProgressIndicator())
+          : Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AddressField(title: 'City', value: city),
-            AddressField(title: 'Address', value: address),
-            AddressField(title: 'House No.', value: houseNumber),
-            AddressField(title: 'More Details', value: moreDetails),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-                  // Handle edit action
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Edit button pressed')),
-                  );
-                },
-                child: const Text('Edit'),
-              ),
-            )
+            TextField(
+              controller: streetController,
+              decoration: InputDecoration(labelText: 'Street'),
+            ),
+            TextField(
+              controller: buildingController,
+              decoration: InputDecoration(labelText: 'Building Number'),
+            ),
+            TextField(
+              controller: cityController,
+              decoration: InputDecoration(labelText: 'City'),
+            ),
+            SizedBox(height: 16),
+            DropdownButton<int>(
+              value: selectedDistrictId,
+              hint: Text("Select a district"),
+              isExpanded: true,
+              items: districts.map((district) {
+                return DropdownMenuItem<int>(
+                  value: district['id'],
+                  child: Text(district['name']),
+                );
+              }).toList(),
+              onChanged: (int? newValue) {
+                setState(() {
+                  selectedDistrictId = newValue;
+                });
+              },
+            ),
+            SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: saveAddress,
+              child: Text('Save Address'),
+            ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class AddressField extends StatelessWidget {
-  final String title;
-  final String value;
-
-  const AddressField({
-    Key? key,
-    required this.title,
-    required this.value,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[700],
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const Divider(),
-        ],
       ),
     );
   }

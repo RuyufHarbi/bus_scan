@@ -104,6 +104,24 @@ class LoginPage extends StatelessWidget {
                 },
                 child: Text("Don't have an account? Sign up"),
               ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => DriverHomePage()),
+                  );
+                },
+                child: Text('DRiver Testing'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => HomePage()),
+                  );
+                },
+                child: Text('student Testing'),
+              ),
             ],
           ),
         ),

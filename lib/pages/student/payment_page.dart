@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../widgets/sidebar.dart';
+import 'package:bus_scan/pages/student/widgets/sidebar.dart';
+
 
 class PaymentPage extends StatelessWidget {
   final List<String> payments = [

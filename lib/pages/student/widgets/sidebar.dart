@@ -1,11 +1,13 @@
 import 'package:bus_scan/pages/student/address_page.dart';
 import 'package:bus_scan/pages/shared/login_page.dart';
 import 'package:flutter/material.dart';
-import '../pages/student/home_page.dart';
-import '../pages/student/account_page.dart';
-import '../pages/shared/menu_page.dart';
-import '../pages/student/schedule_page.dart';
-import '../pages/student/payment_page.dart';
+import 'package:bus_scan/pages/student/home_page.dart';
+import 'package:bus_scan/pages/student/account_page.dart';
+import 'package:bus_scan/pages/shared/menu_page.dart';
+import 'package:bus_scan/pages/student/schedule_page.dart';
+import 'package:bus_scan/pages/student/payment_page.dart';
+
+import 'package:bus_scan/pages/student/search.dart';
 
 
 class SideBar extends StatelessWidget {
@@ -28,7 +30,7 @@ class SideBar extends StatelessWidget {
                 case 'address':
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => AddressPage(city: 'taif', address: '102 cedron chace', houseNumber: '123', moreDetails: 'gogo')), // Replace with your About Us page
+                    MaterialPageRoute(builder: (_) => AddressPage()), // Replace with your About Us page
                   );
                   break;
                 case 'about':
@@ -87,6 +89,8 @@ class SideBar extends StatelessWidget {
           IconButton(icon: Icon(Icons.calendar_month_outlined,size:70.0), onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => SchedulePage()))),
           SizedBox(height: 20),
           IconButton(icon: Icon(Icons.payments_outlined,size:70.0), onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => PaymentPage()))),
+          SizedBox(height: 20),
+          IconButton(icon: Icon(Icons.search_rounded,size:70.0), onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => Search()))),
 
         ],
       ),//
