@@ -3,6 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:bus_scan/pages/driver/widgets/driver_sidebar.dart';
 
 class DriverAccountPage extends StatefulWidget {
+  const DriverAccountPage({super.key});
+
   @override
   _DriverAccountPageState createState() => _DriverAccountPageState();
 }
@@ -122,11 +124,11 @@ class _DriverAccountPageState extends State<DriverAccountPage> {
                           setState(() => isEditing = true);
                         }
                       },
-                      child: Text(isEditing ? 'Save' : 'Edit',
-                          style: TextStyle(fontSize: 16, color: Colors.black)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue[200],
                       ),
+                      child: Text(isEditing ? 'Save' : 'Edit',
+                          style: TextStyle(fontSize: 16, color: Colors.black)),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -136,11 +138,11 @@ class _DriverAccountPageState extends State<DriverAccountPage> {
                         Supabase.instance.client.auth.signOut();
                         Navigator.pushReplacementNamed(context, '/');
                       },
-                      child: Text('Sign Out',
-                          style: TextStyle(fontSize: 16, color: Colors.black)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue[200],
                       ),
+                      child: Text('Sign Out',
+                          style: TextStyle(fontSize: 16, color: Colors.black)),
                     ),
                   ),
                 ],

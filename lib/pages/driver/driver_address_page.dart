@@ -3,7 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:bus_scan/pages/driver/widgets/driver_sidebar.dart';
 
 class DriverAddressPage extends StatefulWidget {
-  const DriverAddressPage({Key? key}) : super(key: key);
+  const DriverAddressPage({super.key});
 
   @override
   State<DriverAddressPage> createState() => _DriverAddressPageState();
@@ -138,12 +138,12 @@ class _DriverAddressPageState extends State<DriverAddressPage> {
                   Center(
                     child: ElevatedButton(
                       onPressed: saveDriverInfo,
-                      child: Text('Save Changes'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue[300],
                         padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                         textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
+                      child: Text('Save Changes'),
                     ),
                   ),
                 ],

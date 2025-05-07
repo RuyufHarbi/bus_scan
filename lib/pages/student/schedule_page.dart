@@ -3,6 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:bus_scan/pages/student/widgets/sidebar.dart';
 
 class SchedulePage extends StatefulWidget {
+  const SchedulePage({super.key});
+
   @override
   _SchedulePageState createState() => _SchedulePageState();
 }

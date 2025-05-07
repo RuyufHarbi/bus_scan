@@ -5,6 +5,8 @@ import 'package:bus_scan/pages/driver/driver_home_page.dart';
 import 'package:bus_scan/pages/student/home_page.dart'; // or student_home_page.dart if you separate
 
 class CreateAccountPage extends StatefulWidget {
+  const CreateAccountPage({super.key});
+
   @override
   _CreateAccountPageState createState() => _CreateAccountPageState();
 }

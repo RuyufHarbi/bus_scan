@@ -1,7 +1,7 @@
+import 'package:bus_scan/pages/driver/student_list.dart';
 import 'package:flutter/material.dart';
 import 'package:bus_scan/pages/driver/driver_address_page.dart';
 import 'package:bus_scan/pages/driver/driver_account_page.dart';
-import 'package:bus_scan/pages/driver/driver_schedule_page.dart';
 import 'package:bus_scan/pages/driver/driver_payment_page.dart';
 import 'package:bus_scan/pages/driver/driver_home_page.dart';
 import 'package:bus_scan/pages/shared/menu_page.dart';
@@ -9,7 +9,7 @@ import 'package:bus_scan/pages/shared/login_page.dart';
 class DriverSideBar extends StatelessWidget {
   final BuildContext context;
 
-  const DriverSideBar({required this.context});
+  const DriverSideBar({super.key, required this.context});
 
   @override
   Widget build(BuildContext context) {
@@ -91,16 +91,16 @@ class DriverSideBar extends StatelessWidget {
 
           SizedBox(height: 20),
 
-          // Schedule button
-          /*IconButton(
-            icon: Icon(Icons.calendar_month_outlined, size: 70.0),
+          //Schedule button
+          IconButton(
+            icon: Icon(Icons.accessibility_new_outlined, size: 70.0),
             onPressed: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => DriverSchedulePage()),
+              MaterialPageRoute(builder: (_) => StudentListPage()),
             ),
           ),
 
-          SizedBox(height: 20),*/
+          SizedBox(height: 20),
 
           // Payment button
           IconButton(

@@ -1,9 +1,14 @@
+import 'package:bus_scan/pages/student/widgets/sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'dart:convert'; // استيراد مكتبة jsonDecode
-import 'package:qr_code_scanner/qr_code_scanner.dart'; // استيراد مكتبة الماسح الضوئي
+import 'dart:convert'; // used for decoding scanned JSON data
+
+// ❌ This import triggers the Gradle build failure (plugin has no `namespace` set)
+// import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -11,8 +16,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final supabase = Supabase.instance.client;
   Map<String, dynamic>? profile;
-  QRViewController? controller; // لإدارة الماسح الضوئي
-  final GlobalKey qrKey = GlobalKey(); // استخدام GlobalKey بدون تحديد النوع
+
+  // ❌ This field depends on QRViewController, which is from the broken plugin
+  // QRViewController? controller;
+
+  // ✅ This is fine
+  final GlobalKey qrKey = GlobalKey();
 
   @override
   void initState() {
@@ -69,18 +78,21 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // ❌ This method uses controller from QRViewController, which is part of the broken plugin
+  /*
   @override
   void dispose() {
     controller?.dispose();
     super.dispose();
   }
+  */
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
-          // Sidebar هنا يمكن استخدام Sidebar مخصص للطالب
+          SideBar(context: context),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -100,22 +112,23 @@ class _HomePageState extends State<HomePage> {
                   ),
                   SizedBox(height: 20),
 
-                  // الماسح الضوئي للكود QR
-                  Container(
-                    height: 400,
-                    child: QRView(
-                      key: qrKey, // إضافة المفتاح بدون تحديد النوع
-                      onQRViewCreated: (QRViewController controller) {
-                        this.controller = controller;
-                        controller.scannedDataStream.listen((scanData) {
-                          // تحقق من أن القيمة ليست null قبل استخدامها
-                          if (scanData.code != null) {
-                            _registerAttendance(scanData.code!); // عند مسح الكود، تسجل الحضور
-                          }
-                        });
-                      },
-                    ),
-                  ),
+                  // ❌ This whole widget block uses the broken QR plugin
+                  /*
+                        SizedBox(
+                          height: 400,
+                          child: QRView(
+                            key: qrKey,
+                            onQRViewCreated: (QRViewController controller) {
+                              this.controller = controller;
+                              controller.scannedDataStream.listen((scanData) {
+                                if (scanData.code != null) {
+                                  _registerAttendance(scanData.code!);
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                        */
                 ],
               ),
             ),

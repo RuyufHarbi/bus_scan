@@ -3,6 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:bus_scan/pages/student/widgets/sidebar.dart';
 
 class AccountPage extends StatefulWidget {
+  const AccountPage({super.key});
+
   @override
   _AccountPageState createState() => _AccountPageState();
 }
@@ -120,11 +122,11 @@ class _AccountPageState extends State<AccountPage> {
                           setState(() => isEditing = true);
                         }
                       },
-                      child: Text(isEditing ? 'Save' : 'Edit',
-                          style: TextStyle(fontSize: 16, color: Colors.black)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue[200],
                       ),
+                      child: Text(isEditing ? 'Save' : 'Edit',
+                          style: TextStyle(fontSize: 16, color: Colors.black)),
                     ),
                   ),
                   SizedBox(height: 10),
@@ -134,11 +136,11 @@ class _AccountPageState extends State<AccountPage> {
                         Supabase.instance.client.auth.signOut();
                         Navigator.pushReplacementNamed(context, '/');
                       },
-                      child: Text('Sign Out',
-                          style: TextStyle(fontSize: 16, color: Colors.black)),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue[200],
                       ),
+                      child: Text('Sign Out',
+                          style: TextStyle(fontSize: 16, color: Colors.black)),
                     ),
                   ),
                 ],

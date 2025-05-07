@@ -13,7 +13,7 @@ import 'package:bus_scan/pages/student/search.dart';
 class SideBar extends StatelessWidget {
   final BuildContext context;
 
-  const SideBar({required this.context});
+  const SideBar({super.key, required this.context});
 
   @override
   Widget build(BuildContext context) {

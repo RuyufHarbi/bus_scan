@@ -3,6 +3,8 @@ import 'package:bus_scan/pages/driver/widgets/driver_sidebar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DriverHomePage extends StatefulWidget {
+  const DriverHomePage({super.key});
+
   @override
   _DriverHomePageState createState() => _DriverHomePageState();
 }

@@ -10,7 +10,7 @@ class LoginPage extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  LoginPage({Key? key}) : super(key: key);
+  LoginPage({super.key});
 
   Future<void> signIn(BuildContext context) async {
     final email = usernameController.text.trim();

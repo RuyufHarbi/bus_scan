@@ -1,16 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:bus_scan/pages/driver/widgets/driver_sidebar.dart';
 
-class DriverPaymentPage extends StatelessWidget {
-  final List<Map<String, String>> payments = [
-    {'name': 'Sara Ahmed', 'status': 'Complete'},
-    {'name': 'Ali Hassan', 'status': 'Incomplete'},
-    {'name': 'Lina Saleh', 'status': 'Complete'},
-    {'name': 'Fahad Nasser', 'status': 'Incomplete'},
-  ];
+class DriverPaymentPage extends StatefulWidget {
+  const DriverPaymentPage({super.key});
 
-  Color getStatusColor(String status) {
-    return status == 'Complete' ? Colors.green[200]! : Colors.red[200]!;
+  @override
+  State<DriverPaymentPage> createState() => _DriverPaymentPageState();
+}
+
+class _DriverPaymentPageState extends State<DriverPaymentPage> {
+  List<Map<String, dynamic>> studentSummaries = [];
+  bool loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAttendanceBasedPayments();
+  }
+
+  Future<void> fetchAttendanceBasedPayments() async {
+    final driverId = Supabase.instance.client.auth.currentUser!.id;
+
+    final attendanceResponse = await Supabase.instance.client.rpc(
+      'get_driver_attendance_summary',
+      params: {'driver_id_input': driverId},
+    );
+
+    final paymentResponse = await Supabase.instance.client
+        .from('payments')
+        .select('student_id, paid, month')
+        .eq('driver_id', driverId)
+        .eq('month', DateTime.now().month.toString());
+
+    final Map<String, dynamic> paymentMap = {
+      for (var item in paymentResponse) item['student_id']: item['paid'],
+    };
+
+    setState(() {
+      studentSummaries = List<Map<String, dynamic>>.from(attendanceResponse).map((student) {
+        final studentId = student['student_id'];
+        final isPaid = paymentMap[studentId] == true;
+        return {
+          ...student,
+          'paid': isPaid,
+        };
+      }).toList();
+      loading = false;
+    });
   }
 
   @override
@@ -21,40 +58,51 @@ class DriverPaymentPage extends StatelessWidget {
           DriverSideBar(context: context),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
+              padding: const EdgeInsets.all(16.0),
+              child: loading
+                  ? Center(child: CircularProgressIndicator())
+                  : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 20),
-                  Text(
-                    'Student Payment Status',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 20),
+                  Text("Student Attendance-Based Payments",
+                      style: Theme.of(context).textTheme.titleLarge),
+                  const SizedBox(height: 20),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: payments.length,
+                      itemCount: studentSummaries.length,
                       itemBuilder: (context, index) {
-                        final payment = payments[index];
+                        final student = studentSummaries[index];
+                        final name = student['first_name'] + ' ' + student['last_name'];
+                        final email = student['email'];
+                        final days = student['days_present'];
+                        final fare = student['price_per_day'];
+                        final total = student['total_due'];
+                        final paid = student['paid'] == true;
+
                         return Card(
-                          color: getStatusColor(payment['status']!),
-                          elevation: 4,
-                          margin: EdgeInsets.symmetric(vertical: 8),
                           child: ListTile(
-                            leading: Icon(Icons.person, size: 40),
-                            title: Text(payment['name'] ?? '', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                            trailing: Text(
-                              payment['status'] ?? '',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            title: Text(name),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Email: $email"),
+                                Text("Days Present: $days"),
+                                Text("Daily Fare: SAR $fare"),
+                                Text("Total Due: SAR $total"),
+                                Text(
+                                  paid ? "Status: Paid" : "Status: Unpaid",
+                                  style: TextStyle(
+                                    color: paid ? Colors.green : Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         );
                       },
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

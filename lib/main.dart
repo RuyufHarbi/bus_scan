@@ -16,6 +16,8 @@ void main() async{
 }
 
 class BuScanApp extends StatelessWidget {
+  const BuScanApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
