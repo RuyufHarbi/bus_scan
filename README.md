@@ -117,23 +117,3 @@ bus_scan/
 
 ---
 
-## 👥 Graduation Research Team & Supervision
-
-### Student
-
-- **Ruyuf Harbi**  
-  *Lead Systems Engineer & Project Architect*
-
-### Academic Supervision
-
-Submitted in partial fulfillment of the academic requirements for the **Bachelor of Computer Science** degree and reviewed by the **Department of Computer Science Graduation Steering Committee Panel**.
-
----
-
-## 📄 License
-
-This project was developed for academic purposes as part of a graduation project.
-
----
-
-⭐ If you found this project interesting, consider giving the repository a star.
