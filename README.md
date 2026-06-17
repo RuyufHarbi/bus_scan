@@ -22,19 +22,18 @@ The system enables students to scan their QR codes when boarding the bus, provid
 
 ## 📸 Application Interface Preview
 
-> **Tip:** Create an `images/` folder at the root of your project, place your screenshots inside it, and use the filenames below for GitHub to display them correctly.
 
-### Onboarding Modules
+![Onboarding Modules](assests/QR.png)
 
-![Onboarding Modules](images/onboarding-modules.png)
 
-### Dynamic Card Validator
 
-![Dynamic Card Validator](images/dynamic-card-validator.png)
+![Dynamic Card Validator](assests/SignIn.png)
 
-### Terminal Feed Hub
 
-![Terminal Feed Hub](images/terminal-feed-hub.png)
+
+![Terminal Feed Hub](assests/Driver.png)
+
+![Terminal Feed Hub](assests/Payment.png)
 
 ---
 
